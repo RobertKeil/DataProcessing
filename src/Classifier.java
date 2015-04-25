@@ -5,15 +5,20 @@ import java.io.PrintStream;
 
 import weka.classifiers.lazy.IBk;
 import weka.core.Instances;
+import weka.core.SerializationHelper;
 
 
 
 public class Classifier {
 	
+	private static final String TRAIN_FILE = "assets/train.arff";
+	private static final String MODEL_FILE = "assets/knn.model";
+	
+	private static final String OUTPUT_FILE = "assets/output.arff";
+	
 	public static void main(String[] args) throws Exception {
 		
-	    final String TrainingDataFileName = "assets/train.arff";
-	    BufferedReader reader = new BufferedReader(new FileReader(TrainingDataFileName));
+	    BufferedReader reader = new BufferedReader(new FileReader(TRAIN_FILE));
 	    
 	    Instances data = new Instances(reader);
 		reader.close();
@@ -24,7 +29,7 @@ public class Classifier {
 		classifier.buildClassifier(data);   // build classifier
 		
 		// Save classifier to file; serialize model
-		 weka.core.SerializationHelper.write("assets/knn.model", classifier);
+		SerializationHelper.write(MODEL_FILE, classifier);
 	}   
 	
 	
@@ -39,7 +44,7 @@ public class Classifier {
 		double[][] processedArff = processed;
 		
 		// Creates ARFF file for the instances to be saved to
-		PrintStream output = new PrintStream(new File("assets/output.arff"));
+		PrintStream output = new PrintStream(new File(OUTPUT_FILE));
 	             
 	
 	     // Create the layout for the file
