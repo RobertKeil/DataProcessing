@@ -18,8 +18,8 @@ public class aggregateCollectedData {
 
 public static String reduceDataset (int rowsPerAggregation) throws Exception {
 
-		String fileName= "C:\\Users\\rober_000\\Dropbox\\2. Semester\\Team Projekt\\PostureData.csv";
-		String outputFileName = "C:\\Users\\rober_000\\Dropbox\\2. Semester\\Team Projekt\\PostureDataReduced.csv";
+		String fileName= "assets/PostureData.csv";
+		String outputFileName = "assets/PostureDataReduced.csv";
 		
 		String timestamp = "";
 		double[][] recordsForStatistics = new double [3][rowsPerAggregation];
