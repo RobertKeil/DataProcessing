@@ -14,7 +14,7 @@ public class aggregateCollectedData {
 
 	public static void main(String[] args) throws Exception {
 		
-		int sampleRate = findOutSampleRate();
+		int sampleRate = findOutSampleRate(60);
 		reduceDataset(sampleRate);
 
 	}
@@ -23,7 +23,7 @@ public static String reduceDataset (int rowsPerAggregation) throws Exception {
 	
 		String fileName= "assets/PostureData.csv";
 		String fileNameSubstring = fileName.split("/")[fileName.split("/").length-1];
-		String outputFileName = fileName.replace(fileNameSubstring, "Reduced" + rowsPerAggregation + "Hz" + fileNameSubstring);
+		String outputFileName = fileName.replace(fileNameSubstring, "Reduced" + Math.round((float)rowsPerAggregation/60) + "Hz" + fileNameSubstring);
 		
 		String timestamp = "";
 		double[][] recordsForStatistics = new double [3][rowsPerAggregation];
@@ -86,7 +86,7 @@ public static String reduceDataset (int rowsPerAggregation) throws Exception {
 		return outputFileName;
 	}
 
-	static int findOutSampleRate() throws Exception{
+	static int findOutSampleRate(int seconds) throws Exception{
 		
 		String fileName= "assets/PostureData.csv";
 		long firstTime;
@@ -103,15 +103,14 @@ public static String reduceDataset (int rowsPerAggregation) throws Exception {
 		firstTime=	new BigDecimal(tempData.split(";")[0]).longValueExact();
 		currentTime=firstTime;
 		
-		//count how many records in the first second --> sampleRate
-		while (tempData != null && currentTime-firstTime<1000) {
+		//count how many records in the defined time window 
+		while (tempData != null && currentTime-firstTime<seconds*1000) {
 			sampleRate++;
 			
 			currentTime=new BigDecimal(tempData.split(";")[0]).longValueExact();
 			tempData = brFile.readLine();
 		}
 		brFile.close();
-		sampleRate--;
 		System.out.println("Sample Rate is " + sampleRate);
 		return sampleRate;
 	}
