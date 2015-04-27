@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -12,14 +14,16 @@ public class aggregateCollectedData {
 
 	public static void main(String[] args) throws Exception {
 		
-		reduceDataset(50);
+		int sampleRate = findOutSampleRate();
+		reduceDataset(sampleRate);
 
 	}
 
 public static String reduceDataset (int rowsPerAggregation) throws Exception {
-
+	
 		String fileName= "assets/PostureData.csv";
-		String outputFileName = "assets/PostureDataReduced.csv";
+		String fileNameSubstring = fileName.split("/")[fileName.split("/").length-1];
+		String outputFileName = fileName.replace(fileNameSubstring, "Reduced" + rowsPerAggregation + "Hz" + fileNameSubstring);
 		
 		String timestamp = "";
 		double[][] recordsForStatistics = new double [3][rowsPerAggregation];
@@ -81,4 +85,35 @@ public static String reduceDataset (int rowsPerAggregation) throws Exception {
 	
 		return outputFileName;
 	}
+
+	static int findOutSampleRate() throws Exception{
+		
+		String fileName= "assets/PostureData.csv";
+		long firstTime;
+		long currentTime;
+		int sampleRate=0;
+		
+		
+		FileInputStream file= new FileInputStream(new File(fileName));
+		BufferedReader brFile = new BufferedReader(new InputStreamReader(file));
+		
+		String tempData = brFile.readLine();
+		tempData = brFile.readLine();
+		
+		firstTime=	new BigDecimal(tempData.split(";")[0]).longValueExact();
+		currentTime=firstTime;
+		
+		//count how many records in the first second --> sampleRate
+		while (tempData != null && currentTime-firstTime<1000) {
+			sampleRate++;
+			
+			currentTime=new BigDecimal(tempData.split(";")[0]).longValueExact();
+			tempData = brFile.readLine();
+		}
+		brFile.close();
+		sampleRate--;
+		System.out.println("Sample Rate is " + sampleRate);
+		return sampleRate;
+	}
+
 }
