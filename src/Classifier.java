@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.PrintStream;
 
+import weka.classifiers.Evaluation;
 import weka.classifiers.lazy.IBk;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
@@ -11,10 +12,11 @@ import weka.core.SerializationHelper;
 
 public class Classifier {
 	
-	private static final String TRAIN_FILE = "assets/train.arff";
+	private static final String TRAIN_FILE = "assets/Reduced50HzPostureData.arff";
 	private static final String MODEL_FILE = "assets/knn.model";
 	
 	private static final String OUTPUT_FILE = "assets/output.arff";
+	
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -30,6 +32,19 @@ public class Classifier {
 		
 		// Save classifier to file; serialize model
 		SerializationHelper.write(MODEL_FILE, classifier);
+		System.out.println("Done");
+		
+		// Options for evaluation
+//		String[] options = new String[4];
+//		 options[0] = "-t";
+//		 options[1] = "assets/Reduced50HzPostureData.arff";
+//		 options[2] = "-split-percentage";
+//		 options[3] = "70";
+		
+		Evaluation eTest = new Evaluation(data);
+		eTest.evaluateModel(classifier, data);
+		System.out.println(classifier);
+		System.out.println(eTest.toSummaryString());
 	}   
 	
 	
