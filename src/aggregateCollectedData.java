@@ -24,7 +24,7 @@ public class aggregateCollectedData {
 
 public static String reduceDataset (int rowsPerAggregation, int subject, int partNumber) throws Exception {
 	
-		String fileName= "C:/Users/rober_000/Desktop/Data/Subject" + subject 
+		String fileName= "assets/Subject" + subject 
 				+ "/Subject" + subject + "_SensorAccelerometerData_" + partNumber + ".csv";
 		String fileNameSubstring = fileName.split("/")[fileName.split("/").length-1];
 		String outputFileName = fileName.replace(fileNameSubstring, "Reduced" + Math.round((float)rowsPerAggregation) + "Hz" + fileNameSubstring);
