@@ -14,21 +14,25 @@ public class aggregateCollectedData {
 
 	public static void main(String[] args) throws Exception {
 		
-		int sampleRate = findOutSampleRate(60);
-		reduceDataset(sampleRate);
+		int subject = 3;
+		int partNumber = 0; 
+		
+//		int sampleRate = findOutSampleRate(60, subject, partNumber);
+		reduceDataset(50, subject, partNumber);
 
 	}
 
-public static String reduceDataset (int rowsPerAggregation) throws Exception {
+public static String reduceDataset (int rowsPerAggregation, int subject, int partNumber) throws Exception {
 	
-		String fileName= "assets/PostureData.csv";
+		String fileName= "C:/Users/rober_000/Desktop/Data/Subject" + subject 
+				+ "/Subject" + subject + "_SensorAccelerometerData_" + partNumber + ".csv";
 		String fileNameSubstring = fileName.split("/")[fileName.split("/").length-1];
-		String outputFileName = fileName.replace(fileNameSubstring, "Reduced" + Math.round((float)rowsPerAggregation/60) + "Hz" + fileNameSubstring);
+		String outputFileName = fileName.replace(fileNameSubstring, "Reduced" + Math.round((float)rowsPerAggregation) + "Hz" + fileNameSubstring);
 		
 		String timestamp = "";
 		double[][] recordsForStatistics = new double [3][rowsPerAggregation];
 		PearsonsCorrelation calculateCorrelation = new PearsonsCorrelation();
-		String[]labels = new String[rowsPerAggregation];
+		String posture, environment, devicePosition, activity;
 		
 		int counterRows = 0;
 		int counterAggregations=0;
@@ -41,7 +45,8 @@ public static String reduceDataset (int rowsPerAggregation) throws Exception {
 		//print Header
 		reducedFile.println("Timestamp" + ";" + "MeanX" + ";" + "MeanY" + ";" +"MeanZ" + ";" +"StndrdDevX" + ";" +"StndrdDevY" + ";" +"StndrdDevZ" + ";" 
 		+ "CorrelationXY" + ";" +"CorrelationXZ" + ";" +"CorrelationYZ" + ";" 
-		+ "IntQrtRangeX" + ";" + "IntQrtRangY" + ";" + "IntQrtRangeZ" +";" +  "posture"); 
+		+ "IntQrtRangeX" + ";" + "IntQrtRangY" + ";" + "IntQrtRangeZ" +";" 
+		+  "Environment" + ";" + "Posture"  + ";"+ "DevicePosition" + ";"+ "Activity"); 
 		
 		//read two times in the beginning to omit header line
 		String tempData = brFile.readLine();		
@@ -49,13 +54,16 @@ public static String reduceDataset (int rowsPerAggregation) throws Exception {
 		
 		while (tempData != null) {		
 				
-				tempDataArr=tempData.split(";");	
-				timestamp = tempDataArr[0];
-				recordsForStatistics[0][counterRows%rowsPerAggregation]= 	Double.parseDouble(tempDataArr[1]);
-				recordsForStatistics[1][counterRows%rowsPerAggregation]= 	Double.parseDouble(tempDataArr[2]);
-				recordsForStatistics[2][counterRows%rowsPerAggregation]= 	Double.parseDouble(tempDataArr[3]);
-				labels[counterRows%rowsPerAggregation] =  tempDataArr[4];
-
+				tempDataArr=tempData.split(",");	
+				timestamp = tempDataArr[1];
+				recordsForStatistics[0][counterRows%rowsPerAggregation]= 	Double.parseDouble(tempDataArr[2]);
+				recordsForStatistics[1][counterRows%rowsPerAggregation]= 	Double.parseDouble(tempDataArr[3]);
+				recordsForStatistics[2][counterRows%rowsPerAggregation]= 	Double.parseDouble(tempDataArr[4]);
+				environment = tempDataArr[5];
+				posture =  tempDataArr[6];
+				devicePosition =  tempDataArr[7];
+				activity =  tempDataArr[8];
+				
 				if (counterRows%rowsPerAggregation==0 && counterRows!=0){
 					DescriptiveStatistics x = new DescriptiveStatistics(recordsForStatistics[0]);
 					DescriptiveStatistics y = new DescriptiveStatistics(recordsForStatistics[1]);
@@ -70,7 +78,8 @@ public static String reduceDataset (int rowsPerAggregation) throws Exception {
 							+ calculateCorrelation.correlation(recordsForStatistics[0], recordsForStatistics[1]) + ";" 
 							+ calculateCorrelation.correlation(recordsForStatistics[0], recordsForStatistics[2]) + ";"
 							+ calculateCorrelation.correlation(recordsForStatistics[1], recordsForStatistics[2]) + ";" 
-							+ intQrtRangeX + ";" + intQrtRangeY + ";" + intQrtRangeZ + ";" + labels[0]);
+							+ intQrtRangeX + ";" + intQrtRangeY + ";" + intQrtRangeZ + ";"
+							+ environment + ";" + posture  + ";" + devicePosition  + ";" + activity);
 					
 					counterAggregations++;
 					System.out.println(counterAggregations);
@@ -86,9 +95,10 @@ public static String reduceDataset (int rowsPerAggregation) throws Exception {
 		return outputFileName;
 	}
 
-	static int findOutSampleRate(int seconds) throws Exception{
+	static int findOutSampleRate(int seconds, int subject, int partNumber) throws Exception{
 		
-		String fileName= "assets/PostureData.csv";
+		String fileName= "C:/Users/rober_000/Desktop/Data/Subject" + subject 
+				+ "/Subject" + subject + "_SensorAccelerometerData_" + partNumber + ".csv";
 		long firstTime;
 		long currentTime;
 		int sampleRate=0;
@@ -100,7 +110,7 @@ public static String reduceDataset (int rowsPerAggregation) throws Exception {
 		String tempData = brFile.readLine();
 		tempData = brFile.readLine();
 		
-		firstTime=	new BigDecimal(tempData.split(";")[0]).longValueExact();
+		firstTime=	new BigDecimal(tempData.split(",")[1]).longValueExact();
 		currentTime=firstTime;
 		
 		//count how many records in the defined time window 
