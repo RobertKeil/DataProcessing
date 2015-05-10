@@ -14,20 +14,22 @@ public class aggregateCollectedData {
 
 	public static void main(String[] args) throws Exception {
 		
-		int subject = 3;
-		int partNumber = 0; 
+		int subject = 5;
+		int partNumber = 8; 
 		
 //		int sampleRate = findOutSampleRate(60, subject, partNumber);
-		reduceDataset(50, subject, partNumber);
+		reduceDataset(50, 6, subject, partNumber);
 
 	}
 
-public static String reduceDataset (int rowsPerAggregation, int subject, int partNumber) throws Exception {
-	
+public static String reduceDataset (int sampleRate, int numberOfSeconds, int subject, int partNumber) throws Exception {
+		
+		int rowsPerAggregation = sampleRate*numberOfSeconds;
+		
 		String fileName= "assets/Subject" + subject 
 				+ "/Subject" + subject + "_SensorAccelerometerData_" + partNumber + ".csv";
 		String fileNameSubstring = fileName.split("/")[fileName.split("/").length-1];
-		String outputFileName = fileName.replace(fileNameSubstring, "Reduced" + Math.round((float)rowsPerAggregation) + "Hz" + fileNameSubstring);
+		String outputFileName = fileName.replace(fileNameSubstring, "Reduced" + sampleRate + "Hz" + fileNameSubstring);
 		
 		String timestamp = "";
 		double[][] recordsForStatistics = new double [3][rowsPerAggregation];
@@ -49,7 +51,8 @@ public static String reduceDataset (int rowsPerAggregation, int subject, int par
 		+  "Environment" + ";" + "Posture"  + ";"+ "DevicePosition" + ";"+ "Activity"); 
 		
 		//read two times in the beginning to omit header line
-		String tempData = brFile.readLine();		
+		String tempData = brFile.readLine();
+		tempData = brFile.readLine();
 		tempData = brFile.readLine();
 		
 		while (tempData != null) {		
