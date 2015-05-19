@@ -35,7 +35,7 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 		String fileNameSubstring = fileName.split("/")[fileName.split("/").length-1];
 		String outputFileName = fileName.replace(fileNameSubstring, "Reduced" + sampleRate + "Hz" + fileNameSubstring);
 		
-		DateFormat format = new SimpleDateFormat("dd.MM.yy kk:mm:sss", Locale.GERMANY);
+		DateFormat format = new SimpleDateFormat("dd.MM.yy kk:mm:ss.SSS", Locale.GERMANY);
 		Date timestampDate;
 		String timestamp = "";
 		
