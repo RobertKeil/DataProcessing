@@ -5,6 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.text.SimpleDateFormat;
 
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -15,7 +19,7 @@ public class aggregateCollectedData {
 	public static void main(String[] args) throws Exception {
 		
 		int subject = 5;
-		int partNumber = 8; 
+		int partNumber = 0; 
 		
 //		int sampleRate = findOutSampleRate(60, subject, partNumber);
 		reduceDataset(50, 6, subject, partNumber);
@@ -31,7 +35,10 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 		String fileNameSubstring = fileName.split("/")[fileName.split("/").length-1];
 		String outputFileName = fileName.replace(fileNameSubstring, "Reduced" + sampleRate + "Hz" + fileNameSubstring);
 		
+		DateFormat format = new SimpleDateFormat("dd.MM.yy kk:mm:sss", Locale.GERMANY);
+		Date timestampDate;
 		String timestamp = "";
+		
 		double[][] recordsForStatistics = new double [3][rowsPerAggregation];
 		PearsonsCorrelation calculateCorrelation = new PearsonsCorrelation();
 		String posture, environment, devicePosition, activity;
@@ -45,10 +52,11 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 		String[] tempDataArr;
 		
 		//print Header
-		reducedFile.println("Timestamp" + ";" + "MeanX" + ";" + "MeanY" + ";" +"MeanZ" + ";" +"StndrdDevX" + ";" +"StndrdDevY" + ";" +"StndrdDevZ" + ";" 
-		+ "CorrelationXY" + ";" +"CorrelationXZ" + ";" +"CorrelationYZ" + ";" 
-		+ "IntQrtRangeX" + ";" + "IntQrtRangY" + ";" + "IntQrtRangeZ" +";" 
-		+  "Environment" + ";" + "Posture"  + ";"+ "DevicePosition" + ";"+ "Activity"); 
+		reducedFile.println("MeanX" + "," + "StdDevX" + "," + "IntqrX" + "," +
+							"MeanY" + "," + "StdDevY" + "," + "IntqrY" + "," +
+							"MeanZ" + "," + "StdDevZ" + "," + "IntqrZ" + "," +
+							"CorrelationXY" + "," + "CorrelationXZ" + "," + "CorrelationYZ" + ","  +
+							"Timestamp" + "," + "Posture"); 
 		
 		//read two times in the beginning to omit header line
 		String tempData = brFile.readLine();
@@ -58,7 +66,7 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 		while (tempData != null) {		
 				
 				tempDataArr=tempData.split(",");	
-				timestamp = tempDataArr[1];
+				timestampDate = format.parse(tempDataArr[1]);
 				recordsForStatistics[0][counterRows%rowsPerAggregation]= 	Double.parseDouble(tempDataArr[2]);
 				recordsForStatistics[1][counterRows%rowsPerAggregation]= 	Double.parseDouble(tempDataArr[3]);
 				recordsForStatistics[2][counterRows%rowsPerAggregation]= 	Double.parseDouble(tempDataArr[4]);
@@ -76,13 +84,13 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 					double intQrtRangeY = y.getPercentile(75)-y.getPercentile(25);
 					double intQrtRangeZ = z.getPercentile(75)-z.getPercentile(25);
 					
-					reducedFile.println(timestamp + ";" + x.getMean() + ";" + y.getMean() + ";" + z.getMean() + ";" 
-							+ x.getStandardDeviation() + ";" + y.getStandardDeviation() + ";" + z.getStandardDeviation() + ";" 
-							+ calculateCorrelation.correlation(recordsForStatistics[0], recordsForStatistics[1]) + ";" 
-							+ calculateCorrelation.correlation(recordsForStatistics[0], recordsForStatistics[2]) + ";"
-							+ calculateCorrelation.correlation(recordsForStatistics[1], recordsForStatistics[2]) + ";" 
-							+ intQrtRangeX + ";" + intQrtRangeY + ";" + intQrtRangeZ + ";"
-							+ environment + ";" + posture  + ";" + devicePosition  + ";" + activity);
+					reducedFile.println(x.getMean() + "," + x.getStandardDeviation() + "," + intQrtRangeX + "," +  
+										y.getMean() + "," + y.getStandardDeviation() + "," + intQrtRangeY + "," +
+										z.getMean() + "," + z.getStandardDeviation() + "," + intQrtRangeZ + "," +
+										calculateCorrelation.correlation(recordsForStatistics[0], recordsForStatistics[1]) + "," +
+										calculateCorrelation.correlation(recordsForStatistics[0], recordsForStatistics[2]) + "," +
+										calculateCorrelation.correlation(recordsForStatistics[1], recordsForStatistics[2]) + "," +
+										timestampDate.getTime() + "," + '"' + posture + '"');
 					
 					counterAggregations++;
 					System.out.println(counterAggregations);
