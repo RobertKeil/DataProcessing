@@ -22,7 +22,7 @@ public class aggregateCollectedData {
 			
 			int subject = 5;
 			int partNumber = i; 
-			findOutSampleRate(1, subject, partNumber);
+//			int sampleRate = findOutSampleRate(1, subject, partNumber);
 			reduceDataset(50, 6, subject, partNumber);
 		}
 
@@ -131,11 +131,15 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 	 */
 	static int findOutSampleRate(int seconds, int subject, int partNumber) throws Exception{
 		
-		String fileName= "C:/Users/rober_000/Desktop/Data/Subject" + subject 
+		String fileName= "assets/Subject" + subject 
 				+ "/Subject" + subject + "_SensorAccelerometerData_" + partNumber + ".csv";
+		
 		long firstTime;
 		long currentTime;
 		int sampleRate=0;
+		
+		DateFormat format = new SimpleDateFormat("dd.MM.yy kk:mm:ss.SSS", Locale.GERMANY);
+		Date timestampDate;
 		
 		
 		FileInputStream file= new FileInputStream(new File(fileName));
@@ -143,15 +147,18 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 		
 		String tempData = brFile.readLine();
 		tempData = brFile.readLine();
+		tempData = brFile.readLine();
 		
-		firstTime=	new BigDecimal(tempData.split(",")[1]).longValueExact();
+		timestampDate = format.parse(tempData.split(",")[1]);
+		firstTime=timestampDate.getTime();
 		currentTime=firstTime;
 		
 		//count how many records in the defined time window 
 		while (tempData != null && currentTime-firstTime<seconds*1000) {
 			sampleRate++;
 			
-			currentTime=new BigDecimal(tempData.split(";")[0]).longValueExact();
+			timestampDate = format.parse(tempData.split(",")[1]);
+			currentTime=timestampDate.getTime();
 			tempData = brFile.readLine();
 		}
 		brFile.close();
