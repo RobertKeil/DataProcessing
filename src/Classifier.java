@@ -5,6 +5,7 @@ import java.io.PrintStream;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.lazy.IBk;
+import weka.classifiers.trees.J48;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 
@@ -12,7 +13,7 @@ import weka.core.SerializationHelper;
 
 public class Classifier {
 	
-	private static final String TRAIN_FILE = "assets/Reduced50HzPostureData.arff";
+	private static final String TRAIN_FILE = "assets/Reduced50HzSubject1Day0.arff";
 	private static final String MODEL_FILE = "assets/knn.model";
 	
 	private static final String OUTPUT_FILE = "assets/output.arff";
@@ -27,7 +28,7 @@ public class Classifier {
 		// Set class attribute
 		data.setClassIndex(data.numAttributes() - 1);
 		
-	    IBk classifier = new IBk(5);        // new instance of a KNN classifier, 5 indicates value for k
+	    IBk classifier = new IBk(1);        // new instance of the classifier, J48 is decision tree, or IBk(k) for kNN
 		classifier.buildClassifier(data);   // build classifier
 		
 		// Save classifier to file; serialize model
