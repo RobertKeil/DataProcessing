@@ -14,14 +14,26 @@ public class aggregateCollectedData {
 
 	public static void main(String[] args) throws Exception {
 		
-		int subject = 5;
-		int partNumber = 8; 
-		
-//		int sampleRate = findOutSampleRate(60, subject, partNumber);
-		reduceDataset(50, 6, subject, partNumber);
-
+		for (int i = 0; i<=12; i++){
+			
+			int subject = 5;
+			int partNumber = i; 
+			findOutSampleRate(1, subject, partNumber);
+			reduceDataset(50, 6, subject, partNumber);
+		}
 	}
 
+	/**
+	 * Reduces the dataset (I.e. a predefined number of rows are aggregated to one new row) and print a new file. 
+	 * Furthermore, statistical figures are created. 
+	 * @param sampleRate The sample rate of the input file is important to be able to identify seconds in the file
+	 * @param numberOfSeconds The amount of seconds that one row in the output file shoulld represent
+	 * @param subject Number of subject (i.e. test person) 
+	 * @param partNumber which partnumber
+	 * @return outputFileName the name of the output file
+	 * @throws Exception
+	 * @author Robert
+	 */
 public static String reduceDataset (int sampleRate, int numberOfSeconds, int subject, int partNumber) throws Exception {
 		
 		int rowsPerAggregation = sampleRate*numberOfSeconds;
@@ -48,7 +60,7 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 		reducedFile.println("Timestamp" + ";" + "MeanX" + ";" + "MeanY" + ";" +"MeanZ" + ";" +"StndrdDevX" + ";" +"StndrdDevY" + ";" +"StndrdDevZ" + ";" 
 		+ "CorrelationXY" + ";" +"CorrelationXZ" + ";" +"CorrelationYZ" + ";" 
 		+ "IntQrtRangeX" + ";" + "IntQrtRangY" + ";" + "IntQrtRangeZ" +";" 
-		+  "Environment" + ";" + "Posture"  + ";"+ "DevicePosition" + ";"+ "Activity"); 
+		+  "Environment" + ";" + "Posture"  + ";"+ "DevicePosition" + ";" + "Activity"); 
 		
 		//read two times in the beginning to omit header line
 		String tempData = brFile.readLine();
@@ -98,6 +110,16 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 		return outputFileName;
 	}
 
+	/**
+	 * This method finds out the sample rate that was used to create the accelerometer data file. 
+	 * This is necessary because it turned out that not all mobile devices were able to fulfill a sample rate of 50 Hz.
+	 * @param seconds how long should the time window be for the sample rate (e.g. 1 --> result shows entries per second, 10 --> result shows entry per 10 seconds
+	 * @param subject Number of subject (i.e. test person) 
+	 * @param partNumber which partnumber
+	 * @return sampleRate 
+	 * @throws Exception
+	 * @author Robert
+	 */
 	static int findOutSampleRate(int seconds, int subject, int partNumber) throws Exception{
 		
 		String fileName= "C:/Users/rober_000/Desktop/Data/Subject" + subject 
