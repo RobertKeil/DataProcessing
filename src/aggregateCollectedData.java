@@ -20,7 +20,7 @@ public class aggregateCollectedData {
 		
 		for (int i = 0; i<=12; i++){
 			
-			int subject = 5;
+			int subject = 1;
 			int partNumber = i; 
 //			int sampleRate = findOutSampleRate(1, subject, partNumber);
 			reduceDataset(50, 6, subject, partNumber);
@@ -92,6 +92,16 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 					DescriptiveStatistics x = new DescriptiveStatistics(recordsForStatistics[0]);
 					DescriptiveStatistics y = new DescriptiveStatistics(recordsForStatistics[1]);
 					DescriptiveStatistics z = new DescriptiveStatistics(recordsForStatistics[2]);
+					
+					// Calculate signal magnitude area
+					double[] xValues = x.getValues();
+					double[] yValues = y.getValues();
+					double[] zValues = z.getValues();
+					double signalMagnitudeArea = 0;
+					
+					for(int i = 0; i < xValues.length; i++) {
+						signalMagnitudeArea =+ Math.abs(xValues[i]) + Math.abs(yValues[i]) + Math.abs(zValues[i]);
+					}
 					
 					double intQrtRangeX = x.getPercentile(75)-x.getPercentile(25);
 					double intQrtRangeY = y.getPercentile(75)-y.getPercentile(25);
