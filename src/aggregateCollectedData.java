@@ -32,7 +32,7 @@ public class aggregateCollectedData {
 	 * Reduces the dataset (I.e. a predefined number of rows are aggregated to one new row) and print a new file. 
 	 * Furthermore, statistical figures are created. 
 	 * @param sampleRate The sample rate of the input file is important to be able to identify seconds in the file
-	 * @param numberOfSeconds The amount of seconds that one row in the output file shoulld represent
+	 * @param numberOfSeconds The amount of seconds that one row in the output file should represent
 	 * @param subject Number of subject (i.e. test person) 
 	 * @param partNumber which partnumber
 	 * @return outputFileName the name of the output file
