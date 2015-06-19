@@ -6,16 +6,16 @@ import weka.classifiers.lazy.IBk;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 
-/** Description of Classifier
- * Creates and saves a classification model into a file. Uses a classifier from the WEKA library. 
+/**
+ * The method in this class creates and saves a classification model into a file. Uses a classifier from the WEKA library. 
  * Model is based on previously collected and labeled data. This data was aggregated and preprocessed 
  * in the aggregateCollectedData class.
- * @author Mats Schade
+ * @author Mats
 */
 public class Classifier {
 	
 	private static final String TRAIN_FILE = "assets/Reduced50HzSubject1Day0.arff";
-	private static final String MODEL_FILE = "assets/knn.model";	
+	private static final String MODEL_FILE = "assets/knnSubject1Day0.model";	
 	
 	public static void main(String[] args) throws Exception {
 		

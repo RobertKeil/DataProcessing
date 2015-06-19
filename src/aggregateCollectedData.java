@@ -20,7 +20,7 @@ public class aggregateCollectedData {
 		
 		for (int i = 0; i<=12; i++){
 			
-			int subject = 1;
+			int subject = 7;
 			int partNumber = i; 
 //			int sampleRate = findOutSampleRate(1, subject, partNumber);
 			reduceDataset(50, 6, subject, partNumber);
@@ -38,6 +38,7 @@ public class aggregateCollectedData {
 	 * @return outputFileName the name of the output file
 	 * @throws Exception
 	 * @author Robert
+	 * @author Mats
 	 */
 public static String reduceDataset (int sampleRate, int numberOfSeconds, int subject, int partNumber) throws Exception {
 		
@@ -50,7 +51,6 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 		
 		DateFormat format = new SimpleDateFormat("dd.MM.yy kk:mm:ss.SSS", Locale.GERMANY);
 		Date timestampDate;
-		String timestamp = "";
 		
 		double[][] recordsForStatistics = new double [3][rowsPerAggregation];
 		PearsonsCorrelation calculateCorrelation = new PearsonsCorrelation();
