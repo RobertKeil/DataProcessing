@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Random;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
@@ -16,45 +17,57 @@ import weka.core.SerializationHelper;
 */
 public class Classifier {
 	
-	private static final String TRAIN_FILE = "assets/subject4allSamplewoUnknown.arff";
-	private static final String MODEL_FILE = "assets/subject4allSamplewoUnknown.J48";	
+	private static final String subject = "2";
+	
+	private static final String TRAIN_FILE = "assets/subject"+subject+"allSamplewoUnknownTRAIN.arff";
+	private static final String TEST_FILE = "assets/subject"+subject+"allSamplewoUnknownTEST.arff";
+	private static final String MODEL_FILE = "assets/subject"+subject+"allSamplewoUnknownTT.nb";	
 	
 	public static void main(String[] args) throws Exception {
 		
 		// Read training data file and save it into an Instances object for WEKA
 	    BufferedReader reader = new BufferedReader(new FileReader(TRAIN_FILE));	    
-	    Instances data = new Instances(reader);
+	    Instances trainData = new Instances(reader);
+		
+		// Read test data file and save it into an Instances object for WEKA
+	    reader = new BufferedReader(new FileReader(TEST_FILE));	    
+	    Instances testData = new Instances(reader);
 		reader.close();
 		
-		// Set class attribute, which is the last attribute
-		data.setClassIndex(data.numAttributes() - 1);
+		// Set class attributes, which is the last attribute
+		trainData.setClassIndex(trainData.numAttributes() - 1);
+		testData.setClassIndex(trainData.numAttributes() - 1);
 		
-		/*
+		
 		// Declare and build the kNN classifier IBk(x), with x as k
-	    IBk classifier = new IBk(3);
-		classifier.buildClassifier(data);
-		*/
+	    IBk knnClassifier = new IBk(3);
+		knnClassifier.buildClassifier(trainData);
+		
 		
 		// Declare and build the Decision Tree classifier J48()
-	    J48 classifier = new J48();
-		classifier.buildClassifier(data);
+	    J48 j48Classifier = new J48();
+		j48Classifier.buildClassifier(trainData);		
 		
-		/*
+		
 		// Declare and build the Naive Bayes classifier
-	    NaiveBayes classifier = new NaiveBayes();
-		classifier.buildClassifier(data);
-		*/
+	    NaiveBayes nbClassifier = new NaiveBayes();
+		nbClassifier.buildClassifier(trainData);	
+		
+		// Evaluation of classifiers
+		Evaluation eTestKnn = new Evaluation(trainData);
+		Evaluation eTestNb = new Evaluation(trainData);
+		Evaluation eTestJ48 = new Evaluation(trainData);
+		eTestKnn.evaluateModel(knnClassifier, testData);
+		eTestNb.evaluateModel(nbClassifier, testData);
+		eTestJ48.evaluateModel(j48Classifier, testData);
+		System.out.println("Percentage of correctly classified instances:");
+		System.out.println("kNN(3): " + eTestKnn.pctCorrect());
+		System.out.println("NB: " + eTestNb.pctCorrect());
+		System.out.println("J48: " + eTestJ48.pctCorrect());
 		
 		// Save classifier to file
-		SerializationHelper.write(MODEL_FILE, classifier);
+		SerializationHelper.write(MODEL_FILE, nbClassifier);
 		System.out.println("Model written to file.");
-		
-		
-		// Evaluation of classifier
-		Evaluation eTest = new Evaluation(data);
-		eTest.evaluateModel(classifier, data);
-		System.out.println(classifier);
-		System.out.println(eTest.toSummaryString());
 		
 	}   
 }
