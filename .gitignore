@@ -84,3 +84,7 @@ local.properties
 .texlipse
 
 /assets
+
+*.ipynb
+
+*.class
