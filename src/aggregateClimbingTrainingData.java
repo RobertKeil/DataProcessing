@@ -12,7 +12,7 @@ public class aggregateClimbingTrainingData {
 
 	public static void main(String[] args) throws Exception {
 		
-		String activity = "climbing (up)";
+		String activity = "on table";
 		
 		reduceDataset(50, 6, activity);
 
@@ -33,7 +33,7 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, String 
 		
 		int rowsPerAggregation = sampleRate*numberOfSeconds;
 		
-		String fileName= "assets/0newTrainingData/original_climbingUp.csv";
+		String fileName= "assets/0newTrainingData/original_onDesk.csv";
 		String outputFileName = "assets/0newTrainingData/" + activity + ".csv";
 		
 		double[][] recordsForStatistics = new double [3][rowsPerAggregation];

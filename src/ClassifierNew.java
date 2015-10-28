@@ -17,9 +17,11 @@ import weka.core.SerializationHelper;
 */
 public class ClassifierNew {
 	
-	private static final String TRAIN_FILE = "assets/0newTrainingData/ARFF/all.arff";
+	private static String subject = "tobi";
+	
+	private static final String TRAIN_FILE = "assets/0newTrainingData/" + subject + "/AllWithoutBiking.arff";
 	// private static final String TEST_FILE = "assets/subject"+subject+"allSamplewoUnknownTEST.arff";
-	private static final String MODEL_FILE = "assets/0newTrainingData/Models/model.nb";	
+	private static final String MODEL_FILE = "assets/0newTrainingData/" + subject + "/Models/knnNoBiking." + subject;	
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -64,7 +66,7 @@ public class ClassifierNew {
 //		System.out.println("J48: " + eTestJ48.pctCorrect());
 		
 		// Save classifier to file
-		SerializationHelper.write(MODEL_FILE, nbClassifier);
+		SerializationHelper.write(MODEL_FILE, knnClassifier);
 		System.out.println("Model written to file.");
 		
 	}   

@@ -18,15 +18,9 @@ public class aggregateCollectedData {
 
 	public static void main(String[] args) throws Exception {
 		
-		for (int i = 0; i<=12; i++){
-			
-			int subject = 7;
-			int partNumber = i; 
-//			int sampleRate = findOutSampleRate(1, subject, partNumber);
-			reduceDataset(50, 6, subject, partNumber);
+		int sampleRate = findOutSampleRate(1);
 		}
 
-	}
 
 	/**
 	 * Reduces the dataset (I.e. a predefined number of rows are aggregated to one new row) and print a new file. 
@@ -139,18 +133,13 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 	 * @throws Exception
 	 * @author Robert
 	 */
-	static int findOutSampleRate(int seconds, int subject, int partNumber) throws Exception{
+	static int findOutSampleRate(int seconds) throws Exception{
 		
-		String fileName= "assets/Subject" + subject 
-				+ "/Subject" + subject + "_SensorAccelerometerData_" + partNumber + ".csv";
+		String fileName= "assets/0newTrainingData/Oliver/original/original_cleaned.csv";
 		
 		long firstTime;
 		long currentTime;
 		int sampleRate=0;
-		
-		DateFormat format = new SimpleDateFormat("dd.MM.yy kk:mm:ss.SSS", Locale.GERMANY);
-		Date timestampDate;
-		
 		
 		FileInputStream file= new FileInputStream(new File(fileName));
 		BufferedReader brFile = new BufferedReader(new InputStreamReader(file));
@@ -158,17 +147,15 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 		String tempData = brFile.readLine();
 		tempData = brFile.readLine();
 		tempData = brFile.readLine();
-		
-		timestampDate = format.parse(tempData.split(",")[1]);
-		firstTime=timestampDate.getTime();
+
+		firstTime= Long.valueOf(tempData.split(",")[0]);
 		currentTime=firstTime;
 		
 		//count how many records in the defined time window 
 		while (tempData != null && currentTime-firstTime<seconds*1000) {
 			sampleRate++;
-			
-			timestampDate = format.parse(tempData.split(",")[1]);
-			currentTime=timestampDate.getTime();
+
+			currentTime=Long.valueOf(tempData.split(",")[0]);
 			tempData = brFile.readLine();
 		}
 		brFile.close();

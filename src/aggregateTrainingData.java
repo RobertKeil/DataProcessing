@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Date;
 
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -12,9 +13,9 @@ public class aggregateTrainingData {
 
 	public static void main(String[] args) throws Exception {
 		
-		String activity = "lying";
-		Long start = 1443878882000L;
-		Long end = 1443879182000L;
+		String activity = "standing";
+		Long start = 1445453940000L;
+		Long end = 1445454299000L;
 		
 		reduceDataset(50, 6, start, end, activity);
 
@@ -26,7 +27,7 @@ public class aggregateTrainingData {
 	 * @param numberOfSeconds The amount of seconds that one row in the output file should represent
 	 * @param start The start time of the activity in ms
 	 * @param end The end time of the activity in ms
-	 * @param actvitiy The activity between the stard and end times
+	 * @param actvitiy The activity between the start and end times
 	 * @return outputFileName the name of the output file
 	 * @throws Exception
 	 * @author Mats
@@ -35,8 +36,8 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, Long st
 		
 		int rowsPerAggregation = sampleRate*numberOfSeconds;
 		
-		String fileName= "assets/0newTrainingData/original2.csv";
-		String outputFileName = "assets/0newTrainingData/" + activity + ".csv";
+		String fileName= "assets/0newTrainingData/Tobi/original_cleaned.csv";
+		String outputFileName = "assets/0newTrainingData/Tobi/" + activity + ".csv";
 		
 		double[][] recordsForStatistics = new double [3][rowsPerAggregation];
 		PearsonsCorrelation calculateCorrelation = new PearsonsCorrelation();
