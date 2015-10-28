@@ -17,11 +17,18 @@ import weka.core.SerializationHelper;
 */
 public class Classifier {
 	
-	private static final String subject = "2";
+	private static final String subject = "mats";
+	private static boolean evaluation = false;
 	
-	private static final String TRAIN_FILE = "assets/subject"+subject+"allSamplewoUnknownTRAIN.arff";
+	/**
+	 * Here you can define the model you want to generate.
+	 * Currently allowed values: "knn", "nb", "j48"
+	 */
+	private static String classifier = "knn";
+	
+	private static final String TRAIN_FILE = "assets/0newTrainingData/" + subject + "/AllWithoutBiking.arff";
 	private static final String TEST_FILE = "assets/subject"+subject+"allSamplewoUnknownTEST.arff";
-	private static final String MODEL_FILE = "assets/subject"+subject+"allSamplewoUnknownTT.nb";	
+	private static final String MODEL_FILE = "assets/0newTrainingData/" + subject + "/Models/knnNoBiking." + subject;	
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -54,20 +61,31 @@ public class Classifier {
 		nbClassifier.buildClassifier(trainData);	
 		
 		// Evaluation of classifiers
-		Evaluation eTestKnn = new Evaluation(trainData);
-		Evaluation eTestNb = new Evaluation(trainData);
-		Evaluation eTestJ48 = new Evaluation(trainData);
-		eTestKnn.evaluateModel(knnClassifier, testData);
-		eTestNb.evaluateModel(nbClassifier, testData);
-		eTestJ48.evaluateModel(j48Classifier, testData);
-		System.out.println("Percentage of correctly classified instances:");
-		System.out.println("kNN(3): " + eTestKnn.pctCorrect());
-		System.out.println("NB: " + eTestNb.pctCorrect());
-		System.out.println("J48: " + eTestJ48.pctCorrect());
-		
+		if (evaluation == true) {
+			Evaluation eTestKnn = new Evaluation(trainData);
+			Evaluation eTestNb = new Evaluation(trainData);
+			Evaluation eTestJ48 = new Evaluation(trainData);
+			eTestKnn.evaluateModel(knnClassifier, testData);
+			eTestNb.evaluateModel(nbClassifier, testData);
+			eTestJ48.evaluateModel(j48Classifier, testData);
+			System.out.println("Percentage of correctly classified instances:");
+			System.out.println("kNN(3): " + eTestKnn.pctCorrect());
+			System.out.println("NB: " + eTestNb.pctCorrect());
+			System.out.println("J48: " + eTestJ48.pctCorrect());
+		}
+				
 		// Save classifier to file
-		SerializationHelper.write(MODEL_FILE, nbClassifier);
-		System.out.println("Model written to file.");
-		
+		switch (classifier) {
+			case "knn": SerializationHelper.write(MODEL_FILE, knnClassifier);
+						System.out.println("Model written to file.");
+						break;
+			case "nb": SerializationHelper.write(MODEL_FILE, nbClassifier);
+						System.out.println("Model written to file.");
+						break;
+			case "j48": SerializationHelper.write(MODEL_FILE, j48Classifier);
+						System.out.println("Model written to file.");
+						break;
+			default: System.out.println("Classifier selection invaled. Model not written to file.");
+		}		
 	}   
 }
