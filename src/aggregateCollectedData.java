@@ -13,17 +13,29 @@ import java.text.SimpleDateFormat;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-
+/**
+ * Aggregates the sensor data that we collected for Timo. We received the data in .csv files.
+ * 
+ * @author Robert
+ *
+ */
 public class aggregateCollectedData {
 
+	/**
+	 * Main method to first find out the sample Rate that lies behind the data set and then reducing the data set correctly. 
+	 * int Subject determines which person collected the data. 
+	 * @param args
+	 * @throws Exception
+	 * @author Robert
+	 */
 	public static void main(String[] args) throws Exception {
 		
 		for (int i = 0; i<=12; i++){
 			
 			int subject = 7;
 			int partNumber = i; 
-//			int sampleRate = findOutSampleRate(1, subject, partNumber);
-			reduceDataset(50, 6, subject, partNumber);
+			int sampleRate = findOutSampleRate(1, subject, partNumber);
+			reduceDataset(sampleRate, 6, subject, partNumber);
 		}
 
 	}
@@ -38,7 +50,6 @@ public class aggregateCollectedData {
 	 * @return outputFileName the name of the output file
 	 * @throws Exception
 	 * @author Robert
-	 * @author Mats
 	 */
 public static String reduceDataset (int sampleRate, int numberOfSeconds, int subject, int partNumber) throws Exception {
 		
