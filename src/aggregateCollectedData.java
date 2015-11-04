@@ -37,7 +37,6 @@ public class aggregateCollectedData {
 			int sampleRate = findOutSampleRate(1, subject, partNumber);
 			reduceDataset(sampleRate, 6, subject, partNumber);
 		}
-
 	}
 
 	/**
@@ -162,7 +161,6 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 		DateFormat format = new SimpleDateFormat("dd.MM.yy kk:mm:ss.SSS", Locale.GERMANY);
 		Date timestampDate;
 		
-		
 		FileInputStream file= new FileInputStream(new File(fileName));
 		BufferedReader brFile = new BufferedReader(new InputStreamReader(file));
 		
@@ -172,12 +170,12 @@ public static String reduceDataset (int sampleRate, int numberOfSeconds, int sub
 		
 		timestampDate = format.parse(tempData.split(",")[1]);
 		firstTime=timestampDate.getTime();
+
 		currentTime=firstTime;
 		
 		//count how many records in the defined time window 
 		while (tempData != null && currentTime-firstTime<seconds*1000) {
 			sampleRate++;
-			
 			timestampDate = format.parse(tempData.split(",")[1]);
 			currentTime=timestampDate.getTime();
 			tempData = brFile.readLine();

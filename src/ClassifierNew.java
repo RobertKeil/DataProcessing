@@ -15,13 +15,13 @@ import weka.core.SerializationHelper;
  * in the aggregateCollectedData class.
  * @author Mats
 */
-public class Classifier {
+public class ClassifierNew {
 	
-	private static final String subject = "2";
+	private static String subject = "tobi";
 	
-	private static final String TRAIN_FILE = "assets/subject"+subject+"allSamplewoUnknownTRAIN.arff";
-	private static final String TEST_FILE = "assets/subject"+subject+"allSamplewoUnknownTEST.arff";
-	private static final String MODEL_FILE = "assets/subject"+subject+"allSamplewoUnknownTT.nb";	
+	private static final String TRAIN_FILE = "assets/0newTrainingData/" + subject + "/AllWithoutBiking.arff";
+	// private static final String TEST_FILE = "assets/subject"+subject+"allSamplewoUnknownTEST.arff";
+	private static final String MODEL_FILE = "assets/0newTrainingData/" + subject + "/Models/knnNoBiking." + subject;	
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -30,13 +30,13 @@ public class Classifier {
 	    Instances trainData = new Instances(reader);
 		
 		// Read test data file and save it into an Instances object for WEKA
-	    reader = new BufferedReader(new FileReader(TEST_FILE));	    
-	    Instances testData = new Instances(reader);
-		reader.close();
+//	    reader = new BufferedReader(new FileReader(TEST_FILE));	    
+//	    Instances testData = new Instances(reader);
+//		reader.close();
 		
 		// Set class attributes, which is the last attribute
 		trainData.setClassIndex(trainData.numAttributes() - 1);
-		testData.setClassIndex(trainData.numAttributes() - 1);
+//		testData.setClassIndex(trainData.numAttributes() - 1);
 		
 		
 		// Declare and build the kNN classifier IBk(x), with x as k
@@ -54,19 +54,19 @@ public class Classifier {
 		nbClassifier.buildClassifier(trainData);	
 		
 		// Evaluation of classifiers
-		Evaluation eTestKnn = new Evaluation(trainData);
-		Evaluation eTestNb = new Evaluation(trainData);
-		Evaluation eTestJ48 = new Evaluation(trainData);
-		eTestKnn.evaluateModel(knnClassifier, testData);
-		eTestNb.evaluateModel(nbClassifier, testData);
-		eTestJ48.evaluateModel(j48Classifier, testData);
-		System.out.println("Percentage of correctly classified instances:");
-		System.out.println("kNN(3): " + eTestKnn.pctCorrect());
-		System.out.println("NB: " + eTestNb.pctCorrect());
-		System.out.println("J48: " + eTestJ48.pctCorrect());
+//		Evaluation eTestKnn = new Evaluation(trainData);
+//		Evaluation eTestNb = new Evaluation(trainData);
+//		Evaluation eTestJ48 = new Evaluation(trainData);
+//		eTestKnn.evaluateModel(knnClassifier, testData);
+//		eTestNb.evaluateModel(nbClassifier, testData);
+//		eTestJ48.evaluateModel(j48Classifier, testData);
+//		System.out.println("Percentage of correctly classified instances:");
+//		System.out.println("kNN(3): " + eTestKnn.pctCorrect());
+//		System.out.println("NB: " + eTestNb.pctCorrect());
+//		System.out.println("J48: " + eTestJ48.pctCorrect());
 		
 		// Save classifier to file
-		SerializationHelper.write(MODEL_FILE, nbClassifier);
+		SerializationHelper.write(MODEL_FILE, knnClassifier);
 		System.out.println("Model written to file.");
 		
 	}   
